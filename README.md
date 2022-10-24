@@ -17,6 +17,7 @@ To enable a smooth, automated flow of data from one stage to another, a data pip
 - We are to create a new table in the original Postgres database. 
 - Postgres would serve as the Data Warehouse for the project. 
 
+
 ## System Architecture
 
 

@@ -11,38 +11,8 @@ from airflow.utils.dates import days_ago
 ###############################################
 # Parameters
 ###############################################
-postgres_conf = {
-    "spark.master": "spark://spark-master:7077",
-    "spark.sql.catalogImplementation": "hive",
-    "spark.sql.hive.metastore.version": "2.3.9",
-    "spark.sql.hive.metastore.jars": "builtin",
-    "spark.sql.hive.metastore.sharedPrefixes": "org.mariadb.jdbc,com.mysql.cj.jdbc,com.mysql.jdbc,org.postgresql,com.microsoft.sqlserver,oracle.jdbc",
-    "spark.sql.hive.metastore.schema.verification": "true",
-    "spark.sql.hive.metastore.schema.verification.record.version": "true",
-    "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
-    "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog"
-}
-###############################################
-postgres_read_conf = {
-    "spark.master": "spark://spark-master:7077",
-    "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem",
-    "spark.hadoop.fs.s3a.endpoint": "http://minio:9000",
-    "spark.hadoop.fs.s3a.access.key": "minio",
-    "spark.hadoop.fs.s3a.secret.key": "minio123",
-    "spark.hadoop.fs.s3a.path.style.access": "true",
-    "spark.hadoop.fs.s3a.connection.ssl.enabled": "false",
-    "spark.sql.catalogImplementation": "hive",
-    "spark.sql.hive.metastore.version": "2.3.9",
-    "spark.sql.hive.metastore.jars": "builtin",
-    "spark.sql.hive.metastore.sharedPrefixes": "org.mariadb.jdbc,com.mysql.cj.jdbc,com.mysql.jdbc,org.postgresql,com.microsoft.sqlserver,oracle.jdbc",
-    "spark.sql.hive.metastore.schema.verification": "true",
-    "spark.sql.hive.metastore.schema.verification.record.version": "true",
-    "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
-    "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog"
-}
-###############################################
 # Spark App Name; shown on Spark UI
-spark_app_name = "Minio-Postgres"
+spark_app_name = "Postgresdb"
 ###############################################
 # Path to Jars
 jar_home="/usr/local/spark/resources"
@@ -66,7 +36,7 @@ with DAG(
     default_args=args,
     schedule_interval=None,
     start_date=days_ago(1),
-    tags=['read/write/spark', 'postgres'],
+    tags=['load/read/data', 'postgres'],
 ) as dag:
         start_task = DummyOperator(
 	task_id='start_task'
@@ -77,11 +47,10 @@ with DAG(
 spark_job_load_postgres = SparkSubmitOperator(task_id='Load_Data',
                                               conn_id='spark_connect',
                                               application='/usr/local/spark/app/postgres/load-postgres.py',
-                                              conf=postgres_conf,
                                               total_executor_cores=2,
                                               jars=app_jars,
                                               driver_class_path=driver_class_path,
-                                              packages="org.postgresql:postgresql:42.4.0,io.delta:delta-core_2.12:2.0.0",
+                                              packages="org.postgresql:postgresql:42.4.0",
                                               executor_cores=2,
                                               executor_memory='2g',
                                               driver_memory='2g',
@@ -93,11 +62,10 @@ spark_job_load_postgres = SparkSubmitOperator(task_id='Load_Data',
 spark_job_read_postgres = SparkSubmitOperator(task_id='Read_Data',
                                               conn_id='spark_connect',
                                               application='/usr/local/spark/app/postgres/read-postgres.py',
-                                              conf=postgres_read_conf,
                                               total_executor_cores=2,
                                               jars=app_jars,
                                               driver_class_path=driver_class_path,
-                                              packages="org.postgresql:postgresql:42.4.0,io.delta:delta-core_2.12:2.0.0,org.apache.hadoop:hadoop-aws:3.2.0,org.apache.spark:spark-hadoop-cloud_2.13:3.2.0",
+                                              packages="org.postgresql:postgresql:42.4.0",
                                               executor_cores=2,
                                               executor_memory='2g',
                                               driver_memory='2g',

@@ -45,7 +45,7 @@ with DAG(
 # Sequence of Tasks
 ###############################################
 spark_job_load_postgres = SparkSubmitOperator(task_id='Load_Data',
-                                              conn_id='spark_connect',
+                                              conn_id='post_connect',
                                               application='/usr/local/spark/app/postgres/load-postgres.py',
                                               total_executor_cores=2,
                                               jars=app_jars,
@@ -60,7 +60,7 @@ spark_job_load_postgres = SparkSubmitOperator(task_id='Load_Data',
                                               ) 
 ############################################### 
 spark_job_read_postgres = SparkSubmitOperator(task_id='Read_Data',
-                                              conn_id='spark_connect',
+                                              conn_id='post_connect',
                                               application='/usr/local/spark/app/postgres/read-postgres.py',
                                               total_executor_cores=2,
                                               jars=app_jars,

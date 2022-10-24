@@ -16,3 +16,8 @@ To enable a smooth, automated flow of data from one stage to another, a data pip
 - The source and destination databases are the same.
 - We are to create a new table in the original Postgres database. 
 - Postgres would serve as the Data Warehouse for the project. 
+
+## System Architecture
+
+
+![](./doc/aa.png "Initialize")

@@ -61,14 +61,14 @@ VALUES (1, '2021-02-16 00:16:06', 'Scott', 'Haines', 'scott@coffeeco.com'),
 create_table = PostgresOperator(
 sql = create_table_sql_query,
 task_id = "create_table_task",
-postgres_conn_id = "spark_connect",
+postgres_conn_id = "post_connect",
 dag = dag
 )
 ##################################################################
 insert_data = PostgresOperator(
 sql = insert_data_sql_query,
 task_id = "insert_data_task",
-postgres_conn_id = "spark_connect",
+postgres_conn_id = "post_connect",
 dag = dag
 )
 ##################################################################

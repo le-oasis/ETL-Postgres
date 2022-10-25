@@ -1,8 +1,0 @@
-numpy
-pandas
-# pytz
-# pyOpenSSL
-# ndg-httpsclient
-# pyasn1
-# redis
-# requests

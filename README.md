@@ -21,4 +21,4 @@ To enable a smooth, automated flow of data from one stage to another, a data pip
 ## System Architecture
 
 
-![](./doc/aa.png "Initialize")
+![](./doc/architecture.png "Initialize")
